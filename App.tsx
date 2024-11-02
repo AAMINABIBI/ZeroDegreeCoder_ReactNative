@@ -1,6 +1,8 @@
 import { ActivityIndicator, Button, FlatList, FlatListComponent, ScrollView, TextInput, TouchableOpacity } from 'react-native'
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
+import { createNavigationContainerRef, NavigationContainer, useRoute } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 const App = () => {
 let [name,setName]=useState("")
@@ -150,10 +152,34 @@ const [selected,setSelected]=useState('null')
 const handleSelecion=(item)=>{
 setSelected(item.name)
 }
+const Satck=createNativeStackNavigator();
 return (
-  <View>
-   
-    <Text style={styles.signUpForm}>sinUP Form</Text>
+  <NavigationContainer>
+
+<Satck.Navigator screenOptions={{
+  headerTitle:()=>{
+    return (
+      <Button title='LEFT btn pressed' onPress={()=>{
+       console.warn("Left button pressed")
+      }}></Button>
+    )
+  },
+  headerRight:()=>{
+    return (
+      <View>
+        <Button title='Right  btn' onPress={()=>{
+          console.warn("right btn pressed")
+        }}></Button>
+      </View>
+    )
+  }
+}}>
+  <Satck.Screen name="Home" component={HomeScreen}></Satck.Screen>
+  <Satck.Screen name="Login" component={LoginScreen}></Satck.Screen>
+</Satck.Navigator>
+
+
+    {/* <Text style={styles.signUpForm}>sinUP Form</Text>
     <View>
     <Text>Name:{name}</Text>
     <TextInput 
@@ -216,7 +242,7 @@ return (
       }
     )
 
-    }
+    } */}
 
     
 
@@ -260,7 +286,7 @@ return(
 </View> */}
 
 
-<View>
+{/* <View>
   <TouchableOpacity style={styles.loaderbtn} onPress={()=>{setShowLoader(true)}}>
     <Text style={{fontSize:20}}>Click to show the loader</Text>
   </TouchableOpacity>
@@ -270,11 +296,17 @@ return(
 
   }
   
-</View>
-
-  </View>
+</View> */}
 
 
+
+{/* 
+Modal is for showing dailogue box
+pressile has some different events than touchable opacity like onPress,onPressIn,onPressOut,onLongPress
+  */}
+ 
+ 
+ </NavigationContainer>
 
 
 );
@@ -351,3 +383,40 @@ fontWeight:"200"
   }
 
 });
+
+const HomeScreen=({navigation})=>{
+  return(
+    <View>
+      <Text>Home screen</Text>
+      <Button title='Login screen' onPress={()=>{
+        navigation.navigate("Login"),{name:"Amna" ,age:'10'}
+      }}>
+
+      </Button>
+    </View>
+  )
+
+}
+
+const LoginScreen=({navigation,route})=>{
+
+  const data = route.params;
+  return(
+<View>
+  <Text>Login Screen</Text>
+  <Text>{data}</Text>
+  <TouchableOpacity style={styles.loaderbtn} onPress={()=>{
+    navigation.navigate("Home")
+  }}> 
+    
+    <Text>HomE Screen</Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity style={styles.loaderbtn} onPress={()=>{
+    navigation.push("Login")
+  }}>
+    <Text>Login Screen</Text>
+  </TouchableOpacity>
+</View>
+  )
+}
